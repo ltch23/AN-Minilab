@@ -141,7 +141,6 @@ rpta[i]:=m_X[i][0];
 str:=str+FloatToStr(rpta[i])+' ';
 end;
 
-
 newton_generalizado:=str;
 
 end;

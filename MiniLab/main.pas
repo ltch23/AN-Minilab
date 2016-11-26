@@ -63,7 +63,6 @@ type
     procedure spkcheckSeePlotClick(Sender: TObject);
     procedure tbtnClosePlotClick(Sender: TObject);
     procedure getValues(finalLine:string);
-    procedure getValues2(finalLine:string);
 
   private
     { private declarations }
@@ -234,12 +233,14 @@ begin
 
               end
 
-              else if (pos('newtongeneralizado(',FinalLine) >0) then
+              else if (pos('newtongeneralizado',FinalLine) >0) then
               begin
-                  getValues2(FinalLine);
+                  Parse.Expression:= Input ;
                   CmdBox.TextColors(clBlack,clWhite);
-                  CmdBox.Writeln( LineEnding + ng.newton_generalizado(arrv,arr1,arr2)  +'     '+ LineEnding);
+                  CmdBox.Writeln( LineEnding +  Parse.Evaluatex()   + LineEnding);
+
               end
+
 
               else
                   Execute;
@@ -314,45 +315,6 @@ begin
 end;
 
 
-procedure TfrmMain.getValues2(FinalLine:string);
-begin
-
-strv:=(copy(FinalLine,pos('(',FinalLine)+1, pos(';',FinalLine)-1-pos('(',FinalLine)));
-delete(FinalLine,pos('(',FinalLine)+1, pos(';',FinalLine)-pos('(',FinalLine));
-str1:=(copy(FinalLine,pos('(',FinalLine)+1, pos(';',FinalLine)-1-pos('(',FinalLine)));
-delete(FinalLine,pos('(',FinalLine)+1, pos(';',FinalLine)-pos('(',FinalLine));
-str2:=(copy(FinalLine,pos('(',FinalLine)+1, pos(')',FinalLine)-1-pos('(',FinalLine)));
-
-auxStr:=strv;
-tam:=0;
-while (pos(' ',auxStr)>0) do begin
-tam:=tam+1;
-delete(auxStr,pos(' ',auxStr), 1);
-end;
-
-SetLength(arrv,tam+1);
-SetLength(arr1,tam+1);
-SetLength(arr2,tam+1);
-
-for i:=0 to tam-1 do begin
-    arrv[i]:= (copy(strv,pos('[',strv)+1, pos(' ',strv)-1-pos('[',strv)));
-    delete(strv,pos('[',strv)+1, pos(' ',strv)-pos('[',strv));
-end;
-arrv[tam]:=(copy(strv,pos('[',strv)+1, pos(']',strv)-1-pos('[',strv)));
-
-for i:=0 to tam-1 do begin
-    arr1[i]:= (copy(str1,pos('[',str1)+1, pos(' ',str1)-1-pos('[',str1)));
-    delete(str1,pos('[',str1)+1, pos(' ',str1)-pos('[',str1));
-end;
-arr1[tam]:=(copy(str1,pos('[',str1)+1, pos(']',str1)-1-pos('[',str1)));
-
-
-for i:=0 to tam-1 do begin
-    arr2[i]:= StrToFloat(copy(str2,pos('[',str2)+1, pos(' ',str2)-1-pos('[',str2)));
-    delete(str2,pos('[',str2)+1, pos(' ',str2)-pos('[',str2));
-end;
-arr2[tam]:=StrToFLoat(copy(str2,pos('[',str2)+1, pos(']',str2)-1-pos('[',str2)));
-end;
 
 
 end.

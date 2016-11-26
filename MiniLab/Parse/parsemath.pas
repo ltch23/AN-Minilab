@@ -5,7 +5,7 @@ unit ParseMath;
 interface
 
 uses
-  Classes, SysUtils, math, fpexprpars, Dialogs,Newton,Senl,MI,Ms;
+  Classes, SysUtils, math, fpexprpars, Dialogs,Newton,Senl,MI,Ms,Ng;
 
 type arr= array of array of real;
 type
@@ -25,6 +25,8 @@ type
       procedure AddString( Variable: string; Value: string );
 
       function Evaluate(): Double;
+      function Evaluatex(): String;
+
       constructor create();
       destructor destroy;
 
@@ -58,6 +60,12 @@ begin
      FParser.Expression:= Expression;
 
      Result:= FParser.Evaluate.ResFloat;
+end;
+function TParseMath.Evaluatex(): String;
+begin
+     FParser.Expression:= Expression;
+
+     Result:= FParser.Evaluate.ResString;
 end;
 
 
@@ -237,6 +245,56 @@ begin
 
 end;
 
+Procedure ExprNewtonGeneralizado( var Result: TFPExpressionResult; Const Args: TExprParameterArray);
+var
+strv,str1,str2,auxStr:string;
+arr1,arrv: array of string;
+arr2: array of real;
+ng: TNg;
+
+tam,i:integer;
+begin
+    strv:= Args[ 0 ].ResString;
+    str1:= Args[ 1 ].ResString;
+    str2:= Args[ 2 ].ResString;
+
+auxStr:=strv;
+tam:=0;
+while (pos(' ',auxStr)>0) do begin
+tam:=tam+1;
+delete(auxStr,pos(' ',auxStr), 1);
+end;
+
+SetLength(arrv,tam+1);
+SetLength(arr1,tam+1);
+SetLength(arr2,tam+1);
+
+for i:=0 to tam-1 do begin
+    arrv[i]:= (copy(strv,pos('[',strv)+1, pos(' ',strv)-1-pos('[',strv)));
+    delete(strv,pos('[',strv)+1, pos(' ',strv)-pos('[',strv));
+end;
+arrv[tam]:=(copy(strv,pos('[',strv)+1, pos(']',strv)-1-pos('[',strv)));
+
+for i:=0 to tam-1 do begin
+    arr1[i]:= (copy(str1,pos('[',str1)+1, pos(' ',str1)-1-pos('[',str1)));
+    delete(str1,pos('[',str1)+1, pos(' ',str1)-pos('[',str1));
+end;
+arr1[tam]:=(copy(str1,pos('[',str1)+1, pos(']',str1)-1-pos('[',str1)));
+
+
+for i:=0 to tam-1 do begin
+    arr2[i]:= StrToFloat(copy(str2,pos('[',str2)+1, pos(' ',str2)-1-pos('[',str2)));
+    delete(str2,pos('[',str2)+1, pos(' ',str2)-pos('[',str2));
+end;
+arr2[tam]:=StrToFLoat(copy(str2,pos('[',str2)+1, pos(']',str2)-1-pos('[',str2)));
+
+Result.ResString:=ng.newton_generalizado(arrv,arr1,arr2);
+
+end;
+
+
+
+
 
 Procedure TParseMath.AddFunctions();
 begin
@@ -256,6 +314,7 @@ begin
        AddFunction('Newton', 'S', 'SF', @ExprNewton );
 
        AddFunction('Integral', 'S', 'SFFFFF', @ExprIntegral );
+       AddFunction('newtongeneralizado', 'S', 'SSS', @ExprNewtonGeneralizado );
 
 
 

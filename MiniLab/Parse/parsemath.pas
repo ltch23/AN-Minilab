@@ -5,7 +5,7 @@ unit ParseMath;
 interface
 
 uses
-  Classes, SysUtils, math, fpexprpars, Dialogs,Newton,Senl,MI,Ms,Ng;
+  Classes, SysUtils, math, fpexprpars, Dialogs,Newton,Senl,MI,Ms,Ng,PIL;
 
 type arr= array of array of real;
 type
@@ -293,6 +293,48 @@ Result.ResString:=ng.newton_generalizado(arrv,arr1,arr2);
 end;
 
 
+Procedure ExprPil( var Result: TFPExpressionResult; Const Args: TExprParameterArray);
+var
+str1,str2, auxStr:string;
+arr1,arr2: array of real;
+pil: TPil;
+
+tam,i:integer;
+begin
+    str2:= Args[ 0 ].ResString;
+    str1:= Args[ 1 ].ResString;
+
+
+auxStr:=str1;
+tam:=0;
+while (pos(' ',auxStr)>0) do begin
+tam:=tam+1;
+delete(auxStr,pos(' ',auxStr), 1);
+end;
+SetLength(arr1,tam+1);
+SetLength(arr2,tam+1);
+
+for i:=0 to tam-1 do begin
+    arr1[i]:= StrToFloat(copy(str1,pos('[',str1)+1, pos(' ',str1)-1-pos('[',str1)));
+    delete(str1,pos('[',str1)+1, pos(' ',str1)-pos('[',str1));
+end;
+arr1[tam]:=StrToFloat(copy(str1,pos('[',str1)+1, pos(']',str1)-1-pos('[',str1)));
+
+
+for i:=0 to tam-1 do begin
+    arr2[i]:= StrToFloat(copy(str2,pos('[',str2)+1, pos(' ',str2)-1-pos('[',str2)));
+    delete(str2,pos('[',str2)+1, pos(' ',str2)-pos('[',str2));
+end;
+arr2[tam]:=StrToFLoat(copy(str2,pos('[',str2)+1, pos(']',str2)-1-pos('[',str2)));
+
+
+Result.ResString:=pil.f(arr1,arr2);
+
+end;
+
+
+
+
 
 
 
@@ -313,6 +355,7 @@ begin
        AddFunction('Secante', 'S', 'SF', @ExprSecante );
        AddFunction('Newton', 'S', 'SF', @ExprNewton );
 
+       AddFunction('PIL', 'S', 'SS', @ExprPil );
        AddFunction('Integral', 'S', 'SFFFFF', @ExprIntegral );
        AddFunction('newtongeneralizado', 'S', 'SSS', @ExprNewtonGeneralizado );
 

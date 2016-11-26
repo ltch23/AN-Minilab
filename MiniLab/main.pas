@@ -233,7 +233,7 @@ begin
 
               end
 
-              else if (pos('newtongeneralizado',FinalLine) >0) then
+              else if (pos('newtongeneralizado',FinalLine) >0) or  (pos('pil',FinalLine) >0)then
               begin
                   Parse.Expression:= Input ;
                   CmdBox.TextColors(clBlack,clWhite);

@@ -90,8 +90,8 @@ matrix[0][1]:= matrix[0][2]+h*fun.Evaluate();
 for i:=1 to n do
   matrix[i][0]:= matrix[i-1][0]+h;
 
-if(matrix[n][0]>xf) then
-matrix[n][0]:= xf;
+{if(matrix[n][0]>xf) then
+matrix[n][0]:= xf;}
 
 for i:=1 to n do begin
 
@@ -104,7 +104,7 @@ for i:=1 to n do begin
     aux:=fun.Evaluate();
 
     fun.NewValue('x',matrix[i-1][0]);
-    fun.NewValue('y',matrix[i-1][1]);
+    fun.NewValue('y',matrix[i-1][2]);
     matrix[i][2]:= matrix[i-1][2]+h*(fun.Evaluate()+aux)/2;
 
 end;
